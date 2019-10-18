@@ -16,7 +16,7 @@ function renderButtons() {
     topics.forEach(function (topic) {
         let btn = $("<button>")
             .attr("data-name", topic)
-            .addClass("btn btn-primary topic")
+            .addClass("btn btn-primary topic m-1")
             .html(topic);
         $("#button-display").append(btn);
     });
@@ -47,14 +47,19 @@ function getGifs() {
 
 function renderGif(gif) {
     //expand on this
+    let container = $("<div>")
+        .addClass("giftainer p-2 text-center m-2");
+    
     let staticImage = $("<img>")
         .attr("src", gif.images.fixed_height_still.url)
         .data("playing", false)
         .data("stillurl", gif.images.fixed_height_still.url)
         .data("gifurl", gif.images.fixed_height.url);
     staticImage.on("click", togglePlaying);
+
+    container.append([`<p>${gif.title}</p>`, staticImage, `<p>Rating: ${gif.rating}</p>`]);
     
-    $("#gif-display").append(staticImage);
+    $("#gif-display").append(container);
 }
 
 //Click event assigned to gifs, to toggle play/pause
@@ -78,6 +83,8 @@ $(".add-button").on("click", function(event) {
     let newButtonName = $("#new-button-name").val();
     topics.push(newButtonName);
     renderButtons();
+
+    $("#new-button-name").val("");
 })
 
 //Click event assigned to buttons to grab specified gifs via API call
