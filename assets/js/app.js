@@ -4,6 +4,8 @@ const LIMIT = "&limit=10";
 
 //Store initial button names here
 var topics = ["German Shepherd", "Puppy", "Corgi", "Husky", "Doggo", "Australian Shepherd", "Puppers", "Bork", "Heckin Cute"];
+var currentTopic;
+var offset = 0;
 
 //Function to render buttons in the HTML
 //Buttons should have data-name attribute matching the topic
@@ -24,11 +26,9 @@ function renderButtons() {
 //display the gif's rating under every gif
 
 function getGifs() {
-    let topic = $(this).data().name;
-    $("#gif-display").empty();
-
+    $("#more").show();
     $.ajax({
-        url: GIF_URL + API_KEY + LIMIT + `&q=${topic}`,
+        url: GIF_URL + API_KEY + LIMIT + `&q=${currentTopic}` + `&offset=${offset}`,
         method: "GET"
     }).then(function (response) {
         console.log(response);
@@ -38,6 +38,8 @@ function getGifs() {
     }, function (error) {
         console.log(error);
     })
+
+    offset += 10;
 }
 
 //Function to actually render the gifs
@@ -80,7 +82,20 @@ $(".add-button").on("click", function(event) {
 
 //Click event assigned to buttons to grab specified gifs via API call
 
-$(document).on("click", ".topic", getGifs);
+$(document).on("click", ".topic", function() {
+    currentTopic = $(this).data().name;
+    $("#gif-display").empty();
+    offset = 0;
+    getGifs();
+});
+
+//Click event to load more gifs
+
+$("#more").on("click", function(event) {
+    event.preventDefault();
+    getGifs();
+})
 
 //Call renderButtons() to initialize page
+$("#more").hide();
 renderButtons();

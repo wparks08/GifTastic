@@ -11,21 +11,26 @@
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-    <div class="container-fluid">
+    <div class="container-fluid d-flex flex-column">
         <!--Button area-->
-        <div id="button-display"></div>
-        <!--Gif area-->
-        <div id="gif-display"></div>
-        <!--Form area-->
-        <div id="form-display">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label class="control-label">Add A Button:</label>
-                    <input type="text" id="new-button-name" class="form-control">
-                </div>
-                <button class="btn btn-success add-button">Go</button>
-            </form>
+        <div class="row">
+            <div id="button-display" class="d-flex justify-content-around flex-wrap col-md-9"></div>
+            <div id="form-display" class="col-md-3">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label class="control-label">Add A Button:</label>
+                        <input type="text" id="new-button-name" class="form-control">
+                    </div>
+                    <button class="btn btn-success add-button">Go</button>
+                </form>
+            </div>
         </div>
+        
+        <!--Gif area-->
+        <div id="gif-display" class="d-flex justify-content-start flex-wrap"></div>
+        <button id="more" class="btn btn-dark col-2 align-self-center">Load More</button>
+        <!--Form area-->
+        
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
