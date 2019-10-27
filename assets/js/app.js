@@ -1,6 +1,7 @@
 const API_KEY = "api_key=76ZP5rDu1BBh38KPtocOB2mx6rVyy6gC";
 const GIF_URL = "https://api.giphy.com/v1/gifs/search?";
 const GIF_BY_ID_URL = "https://api.giphy.com/v1/gifs/";
+const RANDOM_ID_URL = "https://api.giphy.com/v1/randomid";
 const LIMIT = "&limit=10";
 
 const FAVORITES_KEY = "favorites";
@@ -11,6 +12,7 @@ var favorites = [];
 var currentTopic;
 var offset = 0;
 var viewingFavorites = false;
+var randomId = "";
 
 //Function to render buttons in the HTML
 //Buttons should have data-name attribute matching the topic
@@ -41,7 +43,7 @@ function renderButtons() {
 function getGifs() {
     $("#more").show();
     $.ajax({
-        url: GIF_URL + API_KEY + LIMIT + `&q=${currentTopic}` + `&offset=${offset}`,
+        url: GIF_URL + API_KEY + LIMIT + `&q=${currentTopic}` + `&offset=${offset}` + `&random_id=${randomId}`,
         method: "GET"
     }).then(function (response) {
         console.log(response);
@@ -59,11 +61,38 @@ function getGifs() {
 
 function getGifById(id) {
     $.ajax({
-        url: GIF_BY_ID_URL + id + "?" + API_KEY,
+        url: GIF_BY_ID_URL + id + "?" + API_KEY + `&random_id=${randomId}`,
         method: "GET"
     }).then(function (response) {
         console.log(response);
         renderGif(response.data);
+    }, function (error) {
+        console.log("Giphy API Error: " + error);
+    })
+}
+
+//Function to get random user id
+
+function getRandomId() {
+    $.ajax({
+        url: RANDOM_ID_URL + "?" + API_KEY,
+        method: "GET"
+    }).then(function (response) {
+        console.log(response);
+        localStorage.setItem("randomId", response.data.random_id);
+        randomId = response.data.random_id;
+    }, function (error) {
+        console.log("Giphy API Error: " + error);
+    })
+}
+
+function actionRegister(url) {
+    $.ajax({
+        url: url + "&" + API_KEY + "&random_id=" + randomId + "&ts=" + new Date().valueOf(),
+        method: "GET"
+    }).then(function (response) {
+        console.log(response);
+        console.log(url);
     }, function (error) {
         console.log("Giphy API Error: " + error);
     })
@@ -77,12 +106,12 @@ function renderGif(gif) {
     let container = $("<div>")
         .addClass("giftainer p-2 text-center m-2");
     
-    let staticImage = $("<img>")
+    let image = $("<img>")
         .attr("src", gif.images.fixed_height_still.url)
         .data("playing", false)
         .data("stillurl", gif.images.fixed_height_still.url)
         .data("gifurl", gif.images.fixed_height.url);
-    staticImage.on("click", togglePlaying);
+    image.on("click", togglePlaying);
 
     let favoriteIcon = $("<a>")
         .attr("href", "#")
@@ -94,9 +123,14 @@ function renderGif(gif) {
 
     toggleFavoriteStar(favoriteIcon);
 
-    container.append([`<p>${gif.title}</p>`, staticImage, clearfix, `<p class="float-left">Rating: ${gif.rating}</p>`, favoriteIcon]);
+    container.append([`<p>${gif.title}</p>`, image, clearfix, `<p class="float-left">Rating: ${gif.rating}</p>`, favoriteIcon]);
     
     $("#gif-display").append(container);
+
+    if (gif.analytics) {
+        image.data("onClickUrl", gif.analytics.onclick.url);
+        actionRegister(gif.analytics.onload.url);
+    }
 }
 
 //Click event assigned to gifs, to toggle play/pause
@@ -108,6 +142,7 @@ function togglePlaying() {
         $(this).attr("src", data.stillurl);
         $(this).data("playing", false);
     } else {
+        actionRegister(data.onClickUrl);
         $(this).attr("src", data.gifurl);
         $(this).data("playing", true);
     }
@@ -228,6 +263,12 @@ $(document).on("click", "#favorites", function(event) {
 
 //Initialize favorites from local storage
 getFavorites();
+
+if (!localStorage.getItem("randomId")) {
+    getRandomId();
+} else {
+    randomId = localStorage.getItem("randomId");
+}
 
 //Call renderButtons() to initialize page
 $("#more").hide();
