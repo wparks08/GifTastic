@@ -46,7 +46,6 @@ function getGifs() {
         url: GIF_URL + API_KEY + LIMIT + `&q=${currentTopic}` + `&offset=${offset}` + `&random_id=${randomId}`,
         method: "GET"
     }).then(function (response) {
-        console.log(response);
         response.data.forEach(function (gif) {
             renderGif(gif);
         })
@@ -64,7 +63,6 @@ function getGifById(id) {
         url: GIF_BY_ID_URL + id + "?" + API_KEY + `&random_id=${randomId}`,
         method: "GET"
     }).then(function (response) {
-        console.log(response);
         renderGif(response.data);
     }, function (error) {
         console.log("Giphy API Error: " + error);
@@ -78,7 +76,6 @@ function getRandomId() {
         url: RANDOM_ID_URL + "?" + API_KEY,
         method: "GET"
     }).then(function (response) {
-        console.log(response);
         localStorage.setItem("randomId", response.data.random_id);
         randomId = response.data.random_id;
     }, function (error) {
@@ -91,8 +88,6 @@ function actionRegister(url) {
         url: url + "&" + API_KEY + "&random_id=" + randomId + "&ts=" + new Date().valueOf(),
         method: "GET"
     }).then(function (response) {
-        console.log(response);
-        console.log(url);
     }, function (error) {
         console.log("Giphy API Error: " + error);
     })
@@ -142,7 +137,10 @@ function togglePlaying() {
         $(this).attr("src", data.stillurl);
         $(this).data("playing", false);
     } else {
-        actionRegister(data.onClickUrl);
+        if (data.onClickUrl) {
+            actionRegister(data.onClickUrl);
+        }
+        // actionRegister(data.onClickUrl);
         $(this).attr("src", data.gifurl);
         $(this).data("playing", true);
     }
