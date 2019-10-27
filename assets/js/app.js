@@ -140,7 +140,6 @@ function togglePlaying() {
         if (data.onClickUrl) {
             actionRegister(data.onClickUrl);
         }
-        // actionRegister(data.onClickUrl);
         $(this).attr("src", data.gifurl);
         $(this).data("playing", true);
     }
