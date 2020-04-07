@@ -7,34 +7,37 @@ const LIMIT = "&limit=10";
 const FAVORITES_KEY = "favorites";
 
 //Store initial button names here
-var topics = ["German Shepherd", "Puppy", "Corgi", "Husky", "Doggo", "Australian Shepherd", "Puppers", "Bork", "Heckin Cute"];
-var favorites = [];
-var currentTopic;
-var offset = 0;
-var viewingFavorites = false;
-var randomId = "";
+const topics = ["German Shepherd", "Puppy", "Corgi", "Husky", "Doggo", "Australian Shepherd", "Puppers", "Bork", "Heckin Cute"];
+let favorites = [];
+let currentTopic;
+let offset = 0;
+let viewingFavorites = false;
+let randomId = "";
+
+const $favoriteButton = $("<button>")
+    .addClass("btn btn-success m-1")
+    .attr("id", "favorites")
+    .html("Favorites");
 
 //Function to render buttons in the HTML
 //Buttons should have data-name attribute matching the topic
 //#button-display
 
 function renderButtons() {
-    $("#button-display").empty();
+    const $topicButtons = topics.map(createTopicButton);
+    $("#button-display")
+        .empty()
+        .append($favoriteButton)
+        .append($topicButtons);
+}
 
-    let favoriteButton = $("<button>")
-        .addClass("btn btn-success m-1")
-        .attr("id", "favorites")
-        .html("Favorites");
+//Create an individual button for a topic
 
-    $("#button-display").append(favoriteButton);
-
-    topics.forEach(function (topic) {
-        let btn = $("<button>")
-            .attr("data-name", topic)
-            .addClass("btn btn-primary topic m-1")
-            .html(topic);
-        $("#button-display").append(btn);
-    });
+function createTopicButton(topic) {
+    return $("<button>")
+        .attr("data-name", topic)
+        .addClass("btn btn-primary topic m-1")
+        .html(topic);
 }
 
 //Grab 10 static images and place them on the page
@@ -190,7 +193,7 @@ function removeFavorite(id) {
     localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
 }
 
-//Function to get favorites from local storage and assing to favorites array
+//Function to get favorites from local storage and passing to favorites array
 
 function getFavorites() {
     if (localStorage.getItem(FAVORITES_KEY)) {
@@ -211,7 +214,7 @@ function displayFavorites() {
 
 $(".add-button").on("click", function(event) {
     event.preventDefault();
-    let newButtonName = $("#new-button-name").val();
+    const newButtonName = $("#new-button-name").val();
     topics.push(newButtonName);
     renderButtons();
 
