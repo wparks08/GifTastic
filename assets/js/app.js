@@ -121,7 +121,7 @@ function renderGif(gif) {
 
     toggleFavoriteStar(favoriteIcon);
 
-    container.append([`<p>${gif.title}</p>`, image, clearfix, `<p class="float-left">Rating: ${gif.rating}</p>`, favoriteIcon]);
+    container.append([`<p>${gif.title}</p>`, image, clearfix, `<p class="float-left">Rating: ${gif.rating.toUpperCase()}</p>`, favoriteIcon]);
     
     $("#gif-display").append(container);
 
