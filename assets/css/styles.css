@@ -1,4 +1,37 @@
+html, body {
+    height: 100%;
+}
+
+#content {
+    max-height: 100%;
+    margin-top: 0 !important;
+    padding-top: 16px;
+}
+
+#search-results {
+    max-height: calc(100% - 40px);
+    margin-top: 40px;
+    overflow-y: scroll;
+}
+
+#form-display {
+    border-left: 2px solid #778899;
+    padding-top: 16px;
+    margin-top: -16px;
+    background-color: #c7cdd4;
+    position: fixed;
+    right: 0;
+    top: 72px;
+    height: 100%;
+    overflow:hidden;
+}
+
 .giftainer {
     border: 1px solid lightgray;
     border-radius: 3px;
+}
+
+.container-fluid {
+    height: 100%;
+    margin-top: -56px;
 }
