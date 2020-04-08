@@ -54,7 +54,7 @@ function getGifs() {
         })
     }, function (error) {
         console.log("Giphy API Error: " + error);
-    })
+    });
 
     offset += 10;
 }
@@ -103,7 +103,7 @@ function renderGif(gif) {
     //expand on this
     let container = $("<div>")
         .addClass("giftainer p-2 text-center m-2");
-    
+
     let image = $("<img>")
         .attr("src", gif.images.fixed_height_still.url)
         .data("playing", false)
@@ -114,7 +114,7 @@ function renderGif(gif) {
     let favoriteIcon = $("<a>")
         .attr("href", "#")
         .attr("data-id", gif.id)
-        .addClass("float-right favoritify")
+        .addClass("float-right favoritify");
 
     let clearfix = $("<div>")
         .addClass("clearfix mb-2");
@@ -122,7 +122,7 @@ function renderGif(gif) {
     toggleFavoriteStar(favoriteIcon);
 
     container.append([`<p>${gif.title}</p>`, image, clearfix, `<p class="float-left">Rating: ${gif.rating.toUpperCase()}</p>`, favoriteIcon]);
-    
+
     $("#gif-display").append(container);
 
     if (gif.analytics) {
@@ -212,18 +212,18 @@ function displayFavorites() {
 
 //Function to grab new topic from form and add it to array
 
-$(".add-button").on("click", function(event) {
+$(".add-button").on("click", function (event) {
     event.preventDefault();
     const newButtonName = $("#new-button-name").val();
     topics.push(newButtonName);
     renderButtons();
 
     $("#new-button-name").val("");
-})
+});
 
 //Click event assigned to buttons to grab specified gifs via API call
 
-$(document).on("click", ".topic", function() {
+$(document).on("click", ".topic", function () {
     viewingFavorites = false;
     currentTopic = $(this).data().name;
     $("#gif-display").empty();
@@ -233,7 +233,7 @@ $(document).on("click", ".topic", function() {
 
 //Click event to save a gif to favorites
 
-$(document).on("click", ".favoritify", function(event) {
+$(document).on("click", ".favoritify", function (event) {
     event.preventDefault();
     let id = $(this).data("id");
     if (favorites.includes(id)) {
@@ -245,18 +245,18 @@ $(document).on("click", ".favoritify", function(event) {
     if (viewingFavorites) {
         displayFavorites();
     }
-})
+});
 
 //Click event to load more gifs
 
-$("#more").on("click", function(event) {
+$("#more").on("click", function (event) {
     event.preventDefault();
     getGifs();
 });
 
 //Click event to display favorites
 
-$(document).on("click", "#favorites", function(event) {
+$(document).on("click", "#favorites", function (event) {
     event.preventDefault();
     displayFavorites();
 });
